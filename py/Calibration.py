@@ -21,14 +21,14 @@ def calibration():
     imgpointsR = []
 
     # Paths to photos for the calibration
-    path = ('C:\\Users\\petra\\OneDrive\\Documents\\My_docs\\Drone\\DepthMap\\CameraCalibTestPhotos\\camera_calib_6x9\\')
+    path = ('../CameraCalibTestPhotos/camera_calib_6x9/')
 
     extention = ".jpg"
     imageL = "imgL"
     imageR = "imgR"
-    imagesLeft = glob.glob(path + imageL + '*' + extention).sort()
-    imagesRight = glob.glob(path + imageR + '*' + extention).sort()
-    print()
+    imagesLeft = sorted(glob.glob(path + imageL + '*' + extention))
+    imagesRight = sorted(glob.glob(path + imageR + '*' + extention))
+    print(imagesLeft, imagesRight, sep='\n')
 
     for imgLeft, imgRight in zip(imagesLeft, imagesRight):
         imgL = cv.imread(imgLeft)
@@ -89,7 +89,7 @@ def calibration():
                                                                                        criteria_stereo,
                                                                                        flags)
 
-    baseline = Trns[0] * cellSize
+    baseline = np.linalg.norm(Trns)
     rectify_scale = 1  # if 0 image croped, if 1 image not croped
     rect_l, rect_r, proj_mat_l, proj_mat_r, Q, roiL, roiR = cv.stereoRectify(new_mtxL, distL, new_mtxR, distR,
                                                                              grayL.shape[::-1], Rot, Trns,
